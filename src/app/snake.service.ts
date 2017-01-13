@@ -10,7 +10,7 @@ export class SnakeService {
   clearCanvas(ctx: CanvasRenderingContext2D): void {
     ctx.clearRect(0, 0, CANVAS_SIZE.x, CANVAS_SIZE.y)
   };
-  createFood (food: Food, snake: Snake): Food {
+  changeFoodPosition (food: Food, snake: Snake): Food {
     food.coord = food.generateFoodPositionRandomly(CANVAS_SIZE, snake.body);
     return food;
   };
@@ -42,16 +42,37 @@ export class SnakeService {
       ctx.strokeRect(bodyPart.x, bodyPart.y, snake.size, snake.size);
     });
   };
-  moveSnake(snake: Snake, direction:String): Snake {
-    snake = snake.moveSnake(direction);
+  isSnakeEatingFood (snake: Snake, food: Food): boolean {
+    let snakeHead = snake.getSnakeHead();
+    return food.coord && snakeHead.x === food.coord.x && snakeHead.y === food.coord.y;
+  };
+  moveSnake(snake: Snake): Snake {
+    snake = snake.moveSnake();
     snake.body = snake.body.map(bodyPart => this.detectBorderCanvas(snake.size, bodyPart.x, bodyPart.y));
     return snake;
   };
-  onKeyUp(eventKey: string, direction: string): string {
+  onKeyUp(eventKey: string, snake: Snake): Snake {
     let requestedKey = KEY_DIRECTION_ARRAY.find(item => item.key === eventKey);
-    if (requestedKey && requestedKey.opposite !== direction) {
-      direction = requestedKey.direction;
+    if (requestedKey && requestedKey.opposite !== snake.direction) {
+      snake.direction = requestedKey.direction;
     }
-    return direction;
+    return snake;
+  };
+  runGame(snake: Snake, food: Food, ctx: CanvasRenderingContext2D): boolean {
+    this.clearCanvas(ctx);
+    this.moveSnake(snake);
+    let isGameOver = snake.isSnakeCollision();
+    snake.isGrowing = this.isSnakeEatingFood(snake, food);
+    food.coord = snake.isGrowing ? null: food.coord;
+    if (!food.coord) {
+      this.changeFoodPosition(food, snake);
+    }
+    if (food) {
+      this.drawSnake(ctx, snake);
+      this.drawFood(ctx, food);
+    } else {
+      isGameOver = true;
+    }
+    return isGameOver;
   }
 }

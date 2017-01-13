@@ -1,1 +1,1 @@
-export const SIZE_GRID_ELEMENT: number = 10;
+export const SIZE_GRID_ELEMENT: number = 15;

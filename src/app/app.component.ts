@@ -19,7 +19,8 @@ export class AppComponent {
   direction: string;
   snake: Snake;
   food: Food;
-  start: boolean;
+  isGameStarted: boolean;
+  isGameOver: boolean;
   @ViewChild("snakeCanvas") snakeCanvas: ElementRef;
 
   constructor(private snakeService: SnakeService){
@@ -27,43 +28,36 @@ export class AppComponent {
     this.food = new Food();
     this.title = 'Snake-Angular2';
     this.score = 0;
-    this.direction = 'right';
     this.canvasSize = CANVAS_SIZE;
     this.changeDirectionAllowed = true;
-    this.start = false;
+    this.isGameStarted = false;
+    this.isGameOver = false;
   }
 
   ngAfterViewInit() { // wait for the view to init before using the element
     this.snakeService.drawSnake(this.snakeCanvas.nativeElement.getContext("2d"), this.snake);
     let gameRunning = setInterval(() => {
-      if (this.start) {
+      if (this.isGameStarted) {
         this.changeDirectionAllowed = true;
-        this.snakeService.clearCanvas(this.snakeCanvas.nativeElement.getContext("2d"));
-        this.snake = this.snakeService.moveSnake(this.snake, this.direction);
-        if (this.food.coord === null) {
-          this.food = this.snakeService.createFood(this.food, this.snake);
-        }
-        if (this.food) {
-          this.snakeService.drawSnake(this.snakeCanvas.nativeElement.getContext("2d"), this.snake);
-          this.snakeService.drawFood(this.snakeCanvas.nativeElement.getContext("2d"), this.food);
-        } else {
+        this.isGameOver = this.snakeService.runGame(this.snake, this.food, this.snakeCanvas.nativeElement.getContext("2d"));
+        if (this.isGameOver) {
           clearInterval(gameRunning);
         }
       }
-    }, 200);
+    }, 50);
   }
 
   @HostListener('document:keyup', ['$event'])
   onKeyUp (event) {
     if (this.changeDirectionAllowed) {
-      this.direction = this.snakeService.onKeyUp(event.key, this.direction);
+      this.snakeService.onKeyUp(event.key, this.snake);
     }
     this.changeDirectionAllowed = false;
   }
 
   @HostListener('document:click', ['$event'])
   onClick (event) {
-    this.start = true;
+    this.isGameStarted = true;
   }
 
 

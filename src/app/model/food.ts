@@ -8,7 +8,6 @@ export class Food {
     this.size = SIZE_GRID_ELEMENT;
     this.coord = null;
   }
-
   generateFoodPositionRandomly(canvasSize: Coord, unauthorizedCoordinates:Coord[]): Coord {
     let newCoord = null;
     let populatePossiblePositionsArray = function (canvasLength, size) {
@@ -34,7 +33,7 @@ export class Food {
       if (remainingPossibleOrdonnees.length > 0) { // An ordonnee was found
         let newOrd = remainingPossibleOrdonnees[Math.floor(Math.random() * remainingPossibleOrdonnees.length)];
         newCoord = new Coord(newAbscisse, newOrd);
-      } else { // No ordonnee possible for that abscisse, so we remove it from the list of possibles abscisses and start other
+      } else { // No ordonnee possible for that abscisse, so we remove it from the list of possibles abscisses and isGameStarted other
         remainingAbscisses.splice(remainingAbscisses.indexOf(newAbscisse), 1);
       }
     }
