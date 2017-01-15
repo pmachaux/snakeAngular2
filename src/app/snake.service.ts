@@ -4,6 +4,7 @@ import {Coord} from "./model/coord";
 import {KEY_DIRECTION_ARRAY} from "./const/key-direction-array";
 import {CANVAS_SIZE} from "./const/canvas-size";
 import {Food} from "./model/food";
+import {Game} from "./model/game";
 
 @Injectable()
 export class SnakeService {
@@ -58,21 +59,24 @@ export class SnakeService {
     }
     return snake;
   };
-  runGame(snake: Snake, food: Food, ctx: CanvasRenderingContext2D): boolean {
+  runGame(game: Game, ctx: CanvasRenderingContext2D): boolean {
     this.clearCanvas(ctx);
-    this.moveSnake(snake);
-    let isGameOver = snake.isSnakeCollision();
-    snake.isGrowing = this.isSnakeEatingFood(snake, food);
-    food.coord = snake.isGrowing ? null: food.coord;
-    if (!food.coord) {
-      this.changeFoodPosition(food, snake);
+    this.moveSnake(game.snake);
+    game.isGameOver = game.snake.isSnakeCollision();
+    game.snake.isGrowing = this.isSnakeEatingFood(game.snake, game.food);
+    if (game.snake.isGrowing) {
+      game.food.coord = null;
+      game.score = game.score + game.level*10;
     }
-    if (food) {
-      this.drawSnake(ctx, snake);
-      this.drawFood(ctx, food);
+    if (!game.food.coord) {
+      this.changeFoodPosition(game.food, game.snake);
+    }
+    if (game.food) {
+      this.drawSnake(ctx, game.snake);
+      this.drawFood(ctx, game.food);
     } else {
-      isGameOver = true;
+      game.isGameOver = true;
     }
-    return isGameOver;
+    return game.isGameOver;
   }
 }

@@ -1,9 +1,30 @@
 <h1>
   {{title}}
 </h1>
-<div class="snake-div">
-  <canvas #snakeCanvas id="snake-canvas" width="{{canvasSize.x}}" height="{{canvasSize.y}}">
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4">
+      <form class="form-inline">
+        <div class="form-group row level">
+          <label class="col-2 col-form-label" for="level">Level</label>
+          <div class="col-10">
+            <input type="number" name="level" class="form-control" id="level" (ngModelChange)="onLevelChange()" [(ngModel)]="game.level" min="1" max="10"step="1">
+          </div>
+        </div>
+        <div class="form-group row level">
+          <label class="col-2 col-form-label" for="score">Score</label>
+          <div class="col-10">
+            <input type="number" name="score" class="form-control" id="score" [(ngModel)]="game.score" readonly>
+          </div>
+        </div>
+      </form>
+    </div>
 
-  </canvas>
+    <div class="snake-div col-md-8">
+      <canvas #snakeCanvas id="snake-canvas" width="{{canvasSize.x}}" height="{{canvasSize.y}}"></canvas>
+    </div>
+  </div>
+
 </div>
+
 
