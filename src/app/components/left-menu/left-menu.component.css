@@ -1,0 +1,10 @@
+.left-menu {
+  border-right: solid 1px darkgray ;
+  height: 100%;
+  padding-top: 10%;
+}
+
+.left-menu-input {
+  width: 100%;
+  margin-bottom: 15px;
+}

@@ -1,0 +1,34 @@
+.app-content {
+
+}
+
+.btn-start {
+  z-index: 10;
+  background: darkred;
+  color: white;
+  text-align: center;
+  position: absolute;
+  top: 40%;
+  left: 18%;
+  width: 20%;
+  height: 10%;
+}
+
+.btn-start:hover {
+  color: black;
+}
+
+#snake-canvas {
+  border: 2px solid;
+}
+
+.snake-div{
+  padding-top: 2%;
+}
+
+.title {
+  margin-top: 15px;
+  padding-left: 15px;
+  padding-bottom: 15px;
+  border-bottom: solid 1px darkgray;
+}

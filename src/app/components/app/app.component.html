@@ -1,0 +1,20 @@
+<div class="title">
+  <h1>
+    {{title}}
+  </h1>
+</div>
+<div class="container-fluid app-content">
+  <div class="row">
+    <div class="col-md-4">
+      <left-menu [game]="game" [isGameRunning]="isGameRunning" (onLevelChange)="onLevelChange()"></left-menu>
+    </div>
+
+    <div class="snake-div col-md-8">
+      <button class="btn btn-start" [hidden]="!isNewGame" (click)="onStartClicked()">Start playing!</button>
+      <canvas #snakeCanvas id="snake-canvas" width="{{canvasSize.x}}" height="{{canvasSize.y}}"></canvas>
+    </div>
+  </div>
+
+</div>
+
+

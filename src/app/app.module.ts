@@ -3,11 +3,13 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { AppComponent } from './app.component';
+import { AppComponent } from './components/app/app.component';
+import {LeftMenuComponent} from "./components/left-menu/left-menu.component";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LeftMenuComponent
   ],
   imports: [
     BrowserModule,

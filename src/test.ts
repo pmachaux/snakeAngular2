@@ -28,5 +28,5 @@ getTestBed().initTestEnvironment(
 let context = require.context('./', true, /\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
-// Finally, isGameStarted Karma to run the tests.
-__karma__.isGameStarted();
+// Finally, isGameRunning Karma to run the tests.
+__karma__.isGameRunning();
