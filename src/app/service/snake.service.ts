@@ -45,8 +45,8 @@ export class SnakeService {
       } else {
         ctx.fillStyle = colorBody;
         ctx.fillRect(bodyPart.x, bodyPart.y, snake.size, snake.size);
-/*        ctx.strokeStyle = 'darkgreen';
-        ctx.strokeRect(bodyPart.x, bodyPart.y, snake.size, snake.size);*/
+        ctx.strokeStyle = 'darkgreen';
+        ctx.strokeRect(bodyPart.x, bodyPart.y, snake.size, snake.size);
       }
     });
   };
@@ -54,38 +54,46 @@ export class SnakeService {
     let centerCoord = new Coord(headCoord.x + size/2, headCoord.y + size/2);
     let startAngle;
     let endAngle;
-    let startRectCoord;
-    let lenghtRectSize;
+    let startCoord;
+    let firstLineCoord;
+    let secondLineCoord;
     if (snakeDirection === SNAKE_DIRECTION.RIGHT) {
-      startRectCoord = new Coord(headCoord.x, headCoord.y);
-      lenghtRectSize = new Coord(size/2, size);
-      startAngle = Math.PI / 2;
-      endAngle = -Math.PI / 2;
-    } else if (snakeDirection === SNAKE_DIRECTION.LEFT) {
-      startRectCoord = new Coord(headCoord.x + size/2, headCoord.y);
-      lenghtRectSize = new Coord(size/2, size);
+      startCoord = new Coord(headCoord.x, headCoord.y);
+      firstLineCoord = new Coord(headCoord.x + size/2, headCoord.y);
+      secondLineCoord = new Coord(headCoord.x, headCoord.y  + size);
       startAngle = -Math.PI / 2;
       endAngle = Math.PI / 2;
+    } else if (snakeDirection === SNAKE_DIRECTION.LEFT) {
+      startCoord = new Coord(headCoord.x + size, headCoord.y + size);
+      firstLineCoord = new Coord(headCoord.x + size/2, headCoord.y + size);
+      secondLineCoord = new Coord(headCoord.x + size, headCoord.y );
+      startAngle = Math.PI / 2;
+      endAngle = Math.PI * 3 / 2;
     }
     else if (snakeDirection === SNAKE_DIRECTION.UP) {
-      startRectCoord = new Coord(headCoord.x, headCoord.y + size/2);
-      lenghtRectSize = new Coord(size, size/2);
-      startAngle = 0 ;
-      endAngle = Math.PI ;
-    }
-    else {
-      startRectCoord = new Coord(headCoord.x, headCoord.y);
-      lenghtRectSize = new Coord(size, size /2);
-      startAngle = Math.PI;
+      startCoord = new Coord(headCoord.x, headCoord.y + size );
+      firstLineCoord = new Coord(headCoord.x , headCoord.y + size / 2);
+      secondLineCoord = new Coord(headCoord.x + size, headCoord.y + size);
+      startAngle = Math.PI ;
       endAngle = 0;
     }
+    else {
+      startCoord = new Coord(headCoord.x + size, headCoord.y);
+      firstLineCoord = new Coord(headCoord.x + size , headCoord.y + size / 2);
+      secondLineCoord = new Coord(headCoord.x , headCoord.y);
+      startAngle =  0;
+      endAngle = Math.PI;
+    }
 
-    ctx.fillStyle = 'red';
-    ctx.fillRect(startRectCoord.x, startRectCoord.y, lenghtRectSize.x, lenghtRectSize.y);
     ctx.beginPath();
-    ctx.arc(centerCoord.x, centerCoord.y, size/2, startAngle, endAngle, true);
+    ctx.moveTo(startCoord.x, startCoord.y);
+    ctx.lineTo(firstLineCoord.x, firstLineCoord.y);
+    ctx.arc(centerCoord.x, centerCoord.y, size/2, startAngle, endAngle, false);
+    ctx.lineTo(secondLineCoord.x, secondLineCoord.y);
+    ctx.fillStyle = 'red';
     ctx.fill();
-    // ctx.stroke();
+    ctx.strokeStyle = 'darkred';
+    ctx.stroke();
     ctx.closePath();
   };
   drawSnakeTail (tailCoord: Coord, tailDirection: string, size: number, ctx: CanvasRenderingContext2D) {
