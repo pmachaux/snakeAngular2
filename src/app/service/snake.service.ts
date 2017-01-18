@@ -6,9 +6,16 @@ import {CANVAS_SIZE} from "../const/canvas-size";
 import {Food} from "../model/food";
 import {Game} from "../model/game";
 import {SNAKE_DIRECTION} from "../const/snake-direction";
+import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable()
 export class SnakeService {
+  private game: Game;
+  private observableGame :BehaviorSubject<Game>;
+  constructor () {
+    this.game = new Game(1, 0);
+    this.observableGame = <BehaviorSubject<Game>> new BehaviorSubject(this.game);
+  }
   clearCanvas(ctx: CanvasRenderingContext2D): void {
     ctx.clearRect(0, 0, CANVAS_SIZE.x, CANVAS_SIZE.y)
   };
@@ -16,6 +23,9 @@ export class SnakeService {
     food.coord = food.generateFoodPositionRandomly(CANVAS_SIZE, snake.body);
     return food;
   };
+  checkLevelValue(newValue: number, oldValue: number) {
+    return !isNaN(newValue) && newValue !== oldValue && newValue > 0 && newValue < 11;
+  }
   detectBorderCanvas(size: number, abscisse: number, ordonnee: number) : Coord {
     if (abscisse >= CANVAS_SIZE.x) {
       abscisse = 0;
@@ -127,6 +137,9 @@ export class SnakeService {
     ctx.fill();
     ctx.closePath();
   }
+  getGame(): Observable<Game> {
+    return this.observableGame.asObservable();
+  }
   isSnakeEatingFood (snake: Snake, food: Food): boolean {
     let snakeHead = snake.getSnakeHead();
     return food.coord && snakeHead.x === food.coord.x && snakeHead.y === food.coord.y;
@@ -145,24 +158,29 @@ export class SnakeService {
     }
     return isDirectionChanged;
   };
-  runGame(game: Game, ctx: CanvasRenderingContext2D): boolean {
+  setGame (game: Game): void {
+    this.game = game;
+    this.observableGame.next(Object.assign({}, this.game));
+  }
+  runGame(ctx: CanvasRenderingContext2D): boolean {
     this.clearCanvas(ctx);
-    this.moveSnake(game.snake);
-    game.isGameOver = game.snake.isSnakeCollision();
-    game.snake.isGrowing = this.isSnakeEatingFood(game.snake, game.food);
-    if (game.snake.isGrowing) {
-      game.food.coord = null;
-      game.score = game.score + game.level*10;
+    this.moveSnake(this.game.snake);
+    this.game.isGameOver = this.game.snake.isSnakeCollision();
+    this.game.snake.isGrowing = this.isSnakeEatingFood(this.game.snake, this.game.food);
+    if (this.game.snake.isGrowing) {
+      this.game.food.coord = null;
+      this.game.score = this.game.score + this.game.level*10;
     }
-    if (!game.food.coord) {
-      this.changeFoodPosition(game.food, game.snake);
+    if (!this.game.food.coord) {
+      this.changeFoodPosition(this.game.food, this.game.snake);
     }
-    if (game.food) {
-      this.drawSnake(ctx, game.snake);
-      this.drawFood(ctx, game.food);
+    if (this.game.food) {
+      this.drawSnake(ctx, this.game.snake);
+      this.drawFood(ctx, this.game.food);
     } else {
-      game.isGameOver = true;
+      this.game.isGameOver = true;
     }
-    return game.isGameOver;
+    this.observableGame.next(Object.assign({}, this.game));
+    return this.game.isGameOver;
   }
 }

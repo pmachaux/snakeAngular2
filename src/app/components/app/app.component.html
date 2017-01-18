@@ -6,7 +6,7 @@
 <div class="container-fluid app-content">
   <div class="row">
     <div class="col-md-4">
-      <left-menu [game]="game" [isGameRunning]="isGameRunning" (onLevelChange)="onLevelChange()"></left-menu>
+      <left-menu [isGameRunning]="isGameRunning" (onLevelChange)="onLevelChange($event)"></left-menu>
     </div>
 
     <div class="snake-div col-md-8">

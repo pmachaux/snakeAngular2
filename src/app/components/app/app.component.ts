@@ -21,7 +21,9 @@ export class AppComponent {
   private gameRunning: any;
 
   constructor(private snakeService: SnakeService){
-    this.game = new Game(1, 0);
+    this.snakeService.getGame().subscribe(game => {
+      this.game = game;
+    });
     this.title = 'Snake-Angular2';
     this.canvasSize = CANVAS_SIZE;
     this.changeDirectionAllowed = true;
@@ -39,7 +41,7 @@ export class AppComponent {
       if (this.isGameRunning) {
         this.changeDirectionAllowed = false;
         this.stopGame();
-      } else {
+      } else if (!this.isNewGame) {
         this.changeDirectionAllowed = true;
         this.startGame();
       }
@@ -53,10 +55,10 @@ export class AppComponent {
     this.isNewGame = false;
   }
 
-  onLevelChange () {
-    if (this.isGameRunning) {
-      this.stopGame();
-      this.startGame();
+  onLevelChange (event) {
+    if (this.snakeService.checkLevelValue(event.value, this.game.level)) {
+      this.game.level = event.value;
+      this.snakeService.setGame(this.game);
     }
   }
 
@@ -64,11 +66,11 @@ export class AppComponent {
     this.isGameRunning = true;
     this.gameRunning = setInterval(() => {
       this.changeDirectionAllowed = true;
-      let isGameOver = this.snakeService.runGame(this.game, this.snakeCanvas.nativeElement.getContext("2d"));
+      let isGameOver = this.snakeService.runGame(this.snakeCanvas.nativeElement.getContext("2d"));
       if (isGameOver) {
         this.stopGame();
         let highestScore = this.game.setNewHighestScore();
-        this.game = new Game(this.game.level, highestScore);
+        this.snakeService.setGame(new Game(this.game.level, highestScore));
         this.isNewGame = true;
       }
     }, 250 / this.game.level);
