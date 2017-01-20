@@ -24,7 +24,7 @@ export class SnakeService {
     return food;
   };
   checkLevelValue(newValue: number, oldValue: number) {
-    return !isNaN(newValue) && newValue !== oldValue && newValue > 0 && newValue < 11;
+    return newValue && !isNaN(newValue) && newValue !== oldValue && newValue > 0 && newValue < 11;
   }
   detectBorderCanvas(size: number, abscisse: number, ordonnee: number) : Coord {
     if (abscisse >= CANVAS_SIZE.x) {
@@ -40,23 +40,23 @@ export class SnakeService {
     return new Coord(abscisse, ordonnee);
   };
   drawFood(ctx: CanvasRenderingContext2D, food:Food) {
+    ctx.beginPath();
     ctx.fillStyle = 'yellow';
-    ctx.fillRect(food.coord.x, food.coord.y, food.size, food.size);
+    ctx.arc(food.coord.x + food.size /2, food.coord.y + food.size /2, food.size/2,0, 2*Math.PI);
+    ctx.fill();
     ctx.strokeStyle = 'purple';
-    ctx.strokeRect(food.coord.x, food.coord.y, food.size, food.size);
+    ctx.stroke();
+    ctx.closePath();
   }
   drawSnake(ctx: CanvasRenderingContext2D, snake: Snake): void {
     snake.body.forEach((bodyPart, index) => {
-      let colorBody = 'green';
       if (index === snake.body.length -1) {
         this.drawSnakeTail(bodyPart, snake.getTailDirection(), snake.size, ctx)
       } else if (index === 0 ) {
         this.drawSnakeHead(bodyPart, snake.direction, snake.size, ctx);
       } else {
-        ctx.fillStyle = colorBody;
+        ctx.fillStyle = '#3f904d';
         ctx.fillRect(bodyPart.x, bodyPart.y, snake.size, snake.size);
-        ctx.strokeStyle = 'darkgreen';
-        ctx.strokeRect(bodyPart.x, bodyPart.y, snake.size, snake.size);
       }
     });
   };
@@ -100,10 +100,8 @@ export class SnakeService {
     ctx.lineTo(firstLineCoord.x, firstLineCoord.y);
     ctx.arc(centerCoord.x, centerCoord.y, size/2, startAngle, endAngle, false);
     ctx.lineTo(secondLineCoord.x, secondLineCoord.y);
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = '#e42929';
     ctx.fill();
-    ctx.strokeStyle = 'darkred';
-    ctx.stroke();
     ctx.closePath();
   };
   drawSnakeTail (tailCoord: Coord, tailDirection: string, size: number, ctx: CanvasRenderingContext2D) {
@@ -133,7 +131,7 @@ export class SnakeService {
     ctx.moveTo(startCoord.x, startCoord.y);
     ctx.lineTo(middleCoord.x, middleCoord.y);
     ctx.lineTo(endCoord.x, endCoord.y);
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = '#3f904d';
     ctx.fill();
     ctx.closePath();
   }
@@ -158,11 +156,16 @@ export class SnakeService {
     }
     return isDirectionChanged;
   };
-  setGame (game: Game): void {
+  onLevelChange(level: number): void {
+    if (this.checkLevelValue(level, this.game.level)) {
+      this.game.level = level;
+    }
+  };
+  pushGameUpdate (game: Game): void {
     this.game = game;
-    this.observableGame.next(Object.assign({}, this.game));
+    this.observableGame.next(this.game);
   }
-  runGame(ctx: CanvasRenderingContext2D): boolean {
+  nextGameAction(ctx: CanvasRenderingContext2D): boolean {
     this.clearCanvas(ctx);
     this.moveSnake(this.game.snake);
     this.game.isGameOver = this.game.snake.isSnakeCollision();
@@ -180,7 +183,6 @@ export class SnakeService {
     } else {
       this.game.isGameOver = true;
     }
-    this.observableGame.next(Object.assign({}, this.game));
     return this.game.isGameOver;
-  }
+  };
 }

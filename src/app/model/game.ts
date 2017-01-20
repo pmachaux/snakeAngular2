@@ -7,6 +7,7 @@ export class Game{
   highestScore: number;
   level: number;
   isGameOver: boolean;
+  isRunning: boolean;
 
   constructor (level: number, highestScore: number) {
     this.snake = new Snake();
@@ -15,9 +16,11 @@ export class Game{
     this.level = level;
     this.highestScore = highestScore;
     this.isGameOver = false;
+    this.isRunning = false;
   }
 
   setNewHighestScore () : number {
+    console.log('coucou');
     if (this.score > this.highestScore) {
       this.highestScore = this.score;
     }

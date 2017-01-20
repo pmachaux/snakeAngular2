@@ -4,7 +4,7 @@
 
 .btn-start {
   z-index: 10;
-  background: darkred;
+  background: #981b1b;
   color: white;
   text-align: center;
   position: absolute;
@@ -19,7 +19,8 @@
 }
 
 #snake-canvas {
-  border: 2px solid;
+  border: 1px solid black;
+  background-color: #f8f8f8;
 }
 
 .snake-div{
@@ -27,7 +28,9 @@
 }
 
 .title {
-  margin-top: 15px;
+  background-color: #981b1b;
+  color: white;
+  padding-top: 15px;
   padding-left: 15px;
   padding-bottom: 15px;
   border-bottom: solid 1px darkgray;
