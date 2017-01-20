@@ -64,7 +64,7 @@ export class AppComponent implements OnInit {
       if (isGameOver) {
         this.stopGame();
         let highestScore = this.game.setNewHighestScore();
-        this.snakeService.pushGameUpdate(new Game(this.game.level, highestScore));
+        this.snakeService.setGame(new Game(this.game.level, highestScore));
         this.isNewGame = true;
       }
     }, 350 / this.game.level);

@@ -18,5 +18,8 @@
         <input type="number" name="highestScore" class="form-control" id="highestScore" [(ngModel)]="game.highestScore" readonly>
       </div>
     </div>
+    <div class="col-12 score-evolution" [@scoreChanged]="isScoreChanged">
+      {{scoreEvolution}}
+    </div>
   </form>
 </div>
