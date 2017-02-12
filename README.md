@@ -7,6 +7,7 @@ This project was generated with [angular-cli](https://github.com/angular/angular
 Please use Node 6.9.0 or higher, together with NPM 3 or higher.
 
 ##Run
+run npm install in the command prompt (only once to install dependencies)
 run ng serve in the command prompt
 
 ## How to play
